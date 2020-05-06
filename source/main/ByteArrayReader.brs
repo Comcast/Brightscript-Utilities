@@ -148,7 +148,7 @@ function newByteArrayReader() as object
     'If out of bounds, do nothing.
     byteArrayReader.getBytes = function (numberOfBytes)
         newByteArray = CreateObject("roByteArray")
-        if m.index + numberOfBytes < m.byteArray.count()
+        if m.index + numberOfBytes <= m.byteArray.count()
             i = numberOfBytes
             while i > 0
                 newByteArray.push(m.byteArray[m.index + numberOfBytes - i])
