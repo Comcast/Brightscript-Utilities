@@ -19,6 +19,13 @@ function byteArrayTests()
     checkSuccess("testgetInt32FromByteArrayAsInt64", testgetInt32FromByteArrayAsInt64())
     checkSuccess("testgetInt32FromByteArrayAsInt64OutOfBounds", testgetInt32FromByteArrayAsInt64OutOfBounds())
     checkSuccess("testGetInt64FromByteArray", testGetInt64FromByteArray())
+    checkSuccess("testGetInt16FromByteArrayNegative", testGetInt16FromByteArrayNegative())
+    checkSuccess("testGetInt16FromByteArrayPositive", testGetInt16FromByteArrayPositive())
+    checkSuccess("testGetInt16FromByteArrayInt16Max", testGetInt16FromByteArrayInt16Max())
+    checkSuccess("testGetInt16FromByteArrayInt16Min", testGetInt16FromByteArrayInt16Min())
+    checkSuccess("testGetUint16FromByteArray", testGetUint16FromByteArray())
+    checkSuccess("testGetUint8FromByteArray", testGetUint8FromByteArray())
+    checkSuccess("testGetInt8FromByteArray", testGetInt8FromByteArray())
 end function
 
 function testInitializationWithValidByteArray() as boolean
@@ -115,4 +122,81 @@ function testGetInt64FromByteArray() as boolean
     result = byteArrayReader.getInt64FromByteArray()
     return result = 72624976619241231& and byteArrayReader.index = 8 and byteArrayReader.isInError() = false
 
+end function
+
+function testGetInt16FromByteArrayNegative() as boolean
+    byteArrayReader = newByteArrayReader()
+    byteArray = createobject("roByteArray")
+    byteArray.push(-82) '1101 0001
+    byteArray.push(19) '1110 1100
+
+    '1111 1111 1111 1111 1010 1110 0001 0011
+    byteArrayReader.initializeFromByteArray(byteArray)
+    result = byteArrayReader.getInt16FromByteArray()
+    return result = -20973 and byteArrayReader.index = 2 and byteArrayReader.isInError() = false
+end function
+
+function testGetInt16FromByteArrayPositive() as boolean
+    byteArrayReader = newByteArrayReader()
+    byteArray = createobject("roByteArray")
+    byteArray.push(63)    '0011 1111
+    byteArray.push(-31)   '1110 0001
+
+    '0000 0000 0000 0000 0011 1111 1110 0001
+    byteArrayReader.initializeFromByteArray(byteArray)
+    result = byteArrayReader.getInt16FromByteArray()
+    return result = 16353 and byteArrayReader.index = 2 and byteArrayReader.isInError() = false
+end function 
+
+function testGetInt16FromByteArrayInt16Max() as boolean
+    INT16_MAX = 32767
+    byteArrayReader = newByteArrayReader()
+    byteArray = createobject("roByteArray")
+    byteArray.push(127) '0111 1111
+    byteArray.push(-1)  '1111 1111
+    byteArrayReader.initializeFromByteArray(byteArray)
+    result = byteArrayReader.getInt16FromByteArray()
+    return result = INT16_MAX and byteArrayReader.index = 2 and byteArrayReader.isInError() = false
+end function
+
+function testGetInt16FromByteArrayInt16Min() as boolean
+    INT16_MIN = -32768
+    byteArrayReader = newByteArrayReader()
+    byteArray = createobject("roByteArray")
+    byteArray.push(-128) '1000 0000
+    byteArray.push(0)  '0000 0000
+    byteArrayReader.initializeFromByteArray(byteArray)
+    result = byteArrayReader.getInt16FromByteArray()
+    return result = INT16_MIN and byteArrayReader.index = 2 and byteArrayReader.isInError() = false
+end function
+
+function testGetUint16FromByteArray() as boolean
+    expected = 44563
+    byteArrayReader = newByteArrayReader()
+    byteArray = createobject("roByteArray")
+    byteArray.push(-82)  '10101110
+    byteArray.push(19)   '00010011
+    byteArrayReader.initializeFromByteArray(byteArray)
+    result = byteArrayReader.getUint16FromByteArray()
+    return result = expected and byteArrayReader.index = 2 and byteArrayReader.isInError() = false
+end function 
+
+function testGetUint8FromByteArray() as boolean
+    expected = 200
+    byteArrayReader = newByteArrayReader()
+    byteArray = createobject("roByteArray")
+    byteArray.push(-56)    '11001000
+    byteArrayReader.initializeFromByteArray(byteArray)
+    result = byteArrayReader.getUint8FromByteArray()
+    return result = expected and byteArrayReader.index = 1 and byteArrayReader.isInError() = false
+end function
+
+function testGetInt8FromByteArray() as boolean
+    expected = -56
+    byteArrayReader = newByteArrayReader()
+    byteArray = createobject("roByteArray")
+    byteArray.push(-56)    '11001000
+    byteArrayReader.initializeFromByteArray(byteArray)
+    result = byteArrayReader.getInt8FromByteArray()
+    return result = expected and byteArrayReader.index = 1 and byteArrayReader.isInError() = false
 end function

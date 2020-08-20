@@ -122,6 +122,68 @@ function newByteArrayReader() as object
         return value
     end function
 
+    'retrieve one byte from array as a signed integer, range (-128, 127)
+    byteArrayReader.getInt8FromByteArray = function () as integer
+        if m.index + 1 > m.byteArray.count()
+            m.error = true
+            m.reason = "getInt8FromByteArray failed; 1 byte would put index out of bounds"
+            return 0
+        end if
+
+        value = m.byteArray.GetSignedByte(m.index)
+        m.index = m.index + 1
+        return value
+    end function
+
+    'Retrieve one byte from array as an unsigned integer, range (0, 255)
+    byteArrayReader.getUint8FromByteArray = function () as integer
+        if m.index + 1 > m.byteArray.count()
+            m.error = true
+            m.reason = "getUint8FromByteArray failed; 1 byte would put index out of bounds"
+            return 0
+        end if
+
+        value = m.byteArray[m.index]
+        m.index = m.index + 1
+
+        return value
+    end function
+
+    byteArrayReader.getUint16FromByteArray = function () as integer
+        if m.index + 2 > m.byteArray.count()
+            m.error = true
+            m.reason = "getUInt16FromByteArray failed; 2 byte would put index out of bounds"
+        end if
+
+        value = m.byteArray[m.index]
+        value = value << 8
+        value = value + m.byteArray[m.index + 1]
+        m.index = m.index + 2
+
+        return value
+    end function
+
+    byteArrayReader.getInt16FromByteArray = function () as integer
+        if m.index + 2 > m.byteArray.count()
+            m.error = true
+            m.reason = "getUInt16FromByteArray failed; 2 byte would put index out of bounds"
+        end if
+
+        value = m.byteArray[m.index]
+        value = value << 8
+        value = value + m.byteArray[m.index + 1]
+        m.index = m.index + 2
+
+        int16Max = 32767
+
+        if value > int16Max
+            diff = int16Max - value
+            value = (diff or int16Max) and not (diff and int16Max)
+        end if
+
+        return value
+    end function
+
     'Move index up by some 32 bit integer number of bytes
     'If out of bounds, do not set index, print error
     byteArrayReader.skipBytes = function (numberOfBytesToSkip as integer) as void

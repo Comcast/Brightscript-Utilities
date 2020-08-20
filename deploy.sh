@@ -28,7 +28,5 @@ curl -f -sS --user rokudev:$ROKU_DEV_PASS --anyauth -F "mysubmit=Install" -F "ar
 
 echo "Executing tests in 1 second..."
 
-(sleep 1; curl -d '' http://$ROKU_DEV_TARGET:8060/launch/dev?RunTests=true && echo "tests executing now")
-
 echo "Cleaning up bundle.zip output"
 (sleep 3; rm bundle.zip)

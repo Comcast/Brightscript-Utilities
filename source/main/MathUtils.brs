@@ -13,6 +13,10 @@ function initMathsUtil()
     mathsUtil = {}
 
 '== CONSTANTS =='
+    mathsUtil["_8_BIT_INT_MAX"]  = 127%
+    mathsUtil["_8_BIT_INT_MIN"]  = -128%
+    mathsUtil["_16_BIT_INT_MAX"] = 32767%
+    mathsUtil["_16_BIT_INT_MIN"] = -32768%
     mathsUtil["_32_BIT_INT_MAX"] = 2147483647%
     mathsUtil["_32_BIT_INT_MIN"] = -2147483648% 
     mathsUtil["_64_BIT_INT_MAX"] = 9223372036854775807&
@@ -45,6 +49,10 @@ function initMathsUtil()
         if A >= B then return A
         return B
     end function 
+
+    mathsUtil.xor = function(A, B)
+        return (A or B) and not (A and B)
+    end function
 
     mathsUtil.random = function(upperBound as integer, lowerBound=0 as integer) as integer
         'shift random window over from (0, 1) -> (0, upperBound - lowerBound + 1)

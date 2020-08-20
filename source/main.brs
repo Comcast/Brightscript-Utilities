@@ -15,4 +15,5 @@ sub Main()
     prioQueueTests() 
     byteArrayTests() 
     urlUtilsTests()
+    mathUtilTests()
 end sub
