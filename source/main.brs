@@ -9,7 +9,8 @@
 '* See the License for the specific language governing permissions and      *
 '* limitations under the License.                                           *
 '****************************************************************************
-sub Main() 
+sub Main()
+    bitfieldParserTests()
     stringsTest()
     arrayTests()
     prioQueueTests() 
